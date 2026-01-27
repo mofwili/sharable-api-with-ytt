@@ -1,6 +1,6 @@
 #@data/values
 ---
-name: sharable-api
+name: sharable-api-with-ytt
 namespace: sharable
 
 image: europe-west8-docker.pkg.dev/spinning-rust/reg/sportpesa/global/shareable-api:1.2.0
