@@ -1,0 +1,90 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: sharable-api-testing
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/mofwili/sharable-api-with-ytt.git
+    targetRevision: main
+    path: manifests
+    plugin:
+      name: ytt
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: sharable
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sharable-api
+  namespace: sharable
+data:
+  APP_ENVIRONMENT: test
+  APP_NAME: shareable
+  AUTOMIGRATE: "false"
+  PORT: "3000"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sharable-api
+  namespace: sharable
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sharable-api
+  template:
+    metadata:
+      labels:
+        app: sharable-api
+    spec:
+      containers:
+      - name: sharable-api
+        image: europe-west8-docker.pkg.dev/spinning-rust/reg/sportpesa/global/shareable-api:1.2.0
+        ports:
+        - containerPort: 3000
+        envFrom:
+        - configMapRef:
+            name: sharable-api
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sharable-api
+  namespace: sharable
+spec:
+  rules:
+  - host: sharable-api.test.internal
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: sharable-api
+            port:
+              number: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sharable-api
+  namespace: sharable
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/path: /metrics
+    prometheus.io/port: "3000"
+spec:
+  selector:
+    app: sharable-api
+  ports:
+  - name: http
+    port: 3000
+    targetPort: 3000

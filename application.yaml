@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: sharable-api-testing
+  namespace: argocd
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/mofwili/sharable-api-with-ytt.git
+    targetRevision: main
+    path: manifests
+    plugin:
+      name: ytt
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: sharable
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+

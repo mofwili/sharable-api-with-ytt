@@ -1,0 +1,18 @@
+#@data/values-schema
+---
+name: ""
+namespace: ""
+
+image: ""
+replicas: 1
+port: 0
+
+metrics:
+  enabled: false
+  path: ""
+  port: ""
+
+ingress:
+  enabled: false
+  host: ""
+

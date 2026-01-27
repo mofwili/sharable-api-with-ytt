@@ -1,0 +1,21 @@
+#@ load("@ytt:data", "data")
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: #@ data.values.name
+  namespace: #@ data.values.namespace
+  annotations:
+    #@ if data.values.metrics.enabled:
+    prometheus.io/scrape: "true"
+    prometheus.io/path: #@ data.values.metrics.path
+    prometheus.io/port: #@ data.values.metrics.port
+    #@ end
+spec:
+  selector:
+    app: #@ data.values.name
+  ports:
+    - name: http
+      port: #@ data.values.port
+      targetPort: #@ data.values.port
+

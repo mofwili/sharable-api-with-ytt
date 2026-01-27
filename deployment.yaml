@@ -1,0 +1,26 @@
+#@ load("@ytt:data", "data")
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: #@ data.values.name
+  namespace: #@ data.values.namespace
+spec:
+  replicas: #@ data.values.replicas
+  selector:
+    matchLabels:
+      app: #@ data.values.name
+  template:
+    metadata:
+      labels:
+        app: #@ data.values.name
+    spec:
+      containers:
+        - name: #@ data.values.name
+          image: #@ data.values.image
+          ports:
+            - containerPort: #@ data.values.port
+          envFrom:
+            - configMapRef:
+                name: #@ data.values.name
+

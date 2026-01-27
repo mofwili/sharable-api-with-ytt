@@ -1,0 +1,13 @@
+#@ load("@ytt:data", "data")
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: #@ data.values.name
+  namespace: #@ data.values.namespace
+data:
+  APP_ENVIRONMENT: "test"
+  APP_NAME: "shareable"
+  AUTOMIGRATE: "false"
+  PORT: #@ str(data.values.port)
+
