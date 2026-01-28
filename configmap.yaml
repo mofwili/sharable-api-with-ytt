@@ -7,7 +7,7 @@ metadata:
   namespace: #@ data.values.namespace
 data:
   APP_ENVIRONMENT: "test"
-  APP_NAME: "shareable"
+  APP_NAME: "shareable-api-ytt"
   AUTOMIGRATE: "false"
   PORT: #@ str(data.values.port)
 
