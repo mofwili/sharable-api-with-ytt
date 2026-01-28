@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: sharable-api-testing-with-ytt
+  name: sharable-api-testing-with-ytt-plugin
   namespace: argocd
 spec:
   project: default
